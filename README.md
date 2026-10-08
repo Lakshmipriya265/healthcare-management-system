@@ -74,3 +74,8 @@ Healthcare-management-system/
     ├── base.html
     ├── login.html
     └── register.html
+
+🎯 Purpose
+This project was developed as a practical web development project to demonstrate skills in Python, Flask, database management, frontend development, authentication, and role-based healthcare management.
+👩‍💻 Author
+Lakshmipriya R
