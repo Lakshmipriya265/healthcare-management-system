@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Book an Appointment</h1>
+    <p>Schedule a visit with one of our doctors.</p>
+  </div>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back</a>
+</div>
+
+<div class="form-card">
+  <form method="POST" action="{{ url_for('patient_book_appointment') }}">
+
+    <div class="form-group">
+      <label>Select Doctor</label>
+      <select name="doctor_id" required>
+        <option value="">-- Choose a Doctor --</option>
+        {% for doc in doctors %}
+        <option value="{{ doc.id }}">
+          {{ doc.full_name }} — {{ doc.specialization }} &nbsp;|&nbsp; Available: {{ doc.available_days }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Appointment Date</label>
+        <input type="date" name="appointment_date" required />
+      </div>
+      <div class="form-group">
+        <label>Preferred Time</label>
+        <input type="time" name="appointment_time" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Reason for Visit</label>
+      <textarea name="reason" rows="4"
+        placeholder="Describe your symptoms or reason for the appointment..."
+        required></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Book Appointment</button>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+
+  </form>
+</div>
+
+<!-- Doctor info cards -->
+{% if doctors %}
+<div class="section-title" style="margin-top:2rem">Available Doctors</div>
+<div class="doctor-cards">
+  {% for doc in doctors %}
+  <div class="doctor-card">
+    <div class="doctor-avatar">{{ doc.full_name[3] if doc.full_name.startswith('Dr.') else doc.full_name[0] }}</div>
+    <div class="doctor-info">
+      <strong>{{ doc.full_name }}</strong>
+      <span class="badge badge-blue">{{ doc.specialization }}</span>
+      <small>📅 {{ doc.available_days }}</small>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

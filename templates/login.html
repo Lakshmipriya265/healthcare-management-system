@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — MediCare System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,wght@0,600;1,400&display=swap" rel="stylesheet" />
+</head>
+<body class="login-body">
+
+  <div class="login-wrapper">
+
+    <!-- ── LEFT PANEL: Branding ── -->
+    <div class="login-left">
+      <div class="login-brand">
+        <div class="brand-icon">✚</div>
+        <h1>MediCare<br /><em>System</em></h1>
+        <p>Healthcare Management System</p>
+      </div>
+
+      <div class="login-features">
+        <div class="login-feature-item">✔ Role-based access control</div>
+        <div class="login-feature-item">✔ Doctor &amp; patient management</div>
+        <div class="login-feature-item">✔ Appointments &amp; prescriptions</div>
+        <div class="login-feature-item">✔ Vitals tracking by nurses</div>
+      </div>
+
+      <div class="login-tagline">
+        <blockquote>"Compassionate care, powered by technology."</blockquote>
+      </div>
+    </div>
+
+    <!-- ── RIGHT PANEL: Login Form ── -->
+    <div class="login-right">
+      <div class="login-card">
+
+        <h2>Welcome Back</h2>
+        <p class="login-sub">Sign in to access your dashboard</p>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endwith %}
+
+        <!-- Login form -->
+        <form method="POST" action="{{ url_for('login') }}">
+
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter your username"
+              autocomplete="username"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">
+            Sign In &nbsp;→
+          </button>
+
+        </form>
+
+        <!-- Register link -->
+        <div class="register-link" style="margin-top: 20px; text-align: center;">
+          <p>Don't have an account? <a href="{{ url_for('register') }}" style="color: #2563eb; text-decoration: none; font-weight: 500;">Register as Patient</a></p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Doctor Dashboard — MediCare HMS{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Doctor Dashboard</h1>
+    <p>Welcome, <strong>{{ session.full_name }}</strong>. Here is your daily overview.</p>
+  </div>
+  <a href="{{ url_for('doctor_add_prescription') }}" class="btn btn-primary">+ Add Prescription</a>
+</div>
+
+<!-- ══════════════════════════════════════
+     STAT CARDS
+══════════════════════════════════════ -->
+<div class="stats-grid">
+  <div class="stat-card stat-blue">
+    <div class="stat-icon">🧑‍🦽</div>
+    <div class="stat-number">{{ patients | length }}</div>
+    <div class="stat-label">Assigned Patients</div>
+    <a href="{{ url_for('doctor_patients') }}" class="stat-link">View All →</a>
+  </div>
+  <div class="stat-card stat-green">
+    <div class="stat-icon">📅</div>
+    <div class="stat-number">{{ upcoming | length }}</div>
+    <div class="stat-label">Upcoming Appointments</div>
+    <a href="#upcoming" class="stat-link">View Below →</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     QUICK ACTIONS
+══════════════════════════════════════ -->
+<div class="section-title">Quick Actions</div>
+<div class="action-grid">
+  <a href="{{ url_for('doctor_patients') }}" class="action-card">
+    <span class="action-icon">👥</span>
+    <span>My Patients</span>
+  </a>
+  <a href="{{ url_for('doctor_add_prescription') }}" class="action-card">
+    <span class="action-icon">💊</span>
+    <span>Add Prescription</span>
+  </a>
+</div>
+
+<!-- ══════════════════════════════════════
+     UPCOMING APPOINTMENTS
+══════════════════════════════════════ -->
+<div id="upcoming" class="section-header">
+  <div class="section-title">Upcoming Appointments</div>
+</div>
+
+<div class="table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Patient</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for appt in upcoming %}
+      <tr>
+        <td>
+          <div style="display:flex; align-items:center; gap:.6rem">
+            <div class="avatar avatar-blue">{{ appt.patient_name[0] }}</div>
+            <strong>{{ appt.patient_name }}</strong>
+          </div>
+        </td>
+        <td>{{ appt.appointment_date }}</td>
+        <td>{{ appt.appointment_time }}</td>
+        <td>{{ appt.reason }}</td>
+        <td>
+          <span class="badge
+            {% if appt.status == 'Confirmed' %}badge-green
+            {% elif appt.status == 'Completed' %}badge-blue
+            {% elif appt.status == 'Cancelled' %}badge-red
+            {% else %}badge-yellow{% endif %}">
+            {{ appt.status }}
+          </span>
+        </td>
+        <td>
+          <a href="{{ url_for('doctor_patient_history', patient_id=appt.patient_id) }}"
+             class="btn btn-sm btn-secondary">
+            View History
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" class="empty-row">No upcoming appointments.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════
+     ASSIGNED PATIENTS SUMMARY
+══════════════════════════════════════ -->
+<div class="section-header">
+  <div class="section-title">My Patients</div>
+  <a href="{{ url_for('doctor_patients') }}" class="btn btn-sm btn-secondary">View All</a>
+</div>
+
+<div class="table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Patient Name</th>
+        <th>Blood Group</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in patients %}
+      <tr>
+        <td>
+          <div style="display:flex; align-items:center; gap:.6rem">
+            <div class="avatar avatar-green">{{ p.full_name[0] }}</div>
+            <strong>{{ p.full_name }}</strong>
+          </div>
+        </td>
+        <td>
+          {% if p.blood_group %}
+            <span class="badge badge-red">{{ p.blood_group }}</span>
+          {% else %}—{% endif %}
+        </td>
+        <td>
+          <a href="{{ url_for('doctor_patient_history', patient_id=p.id) }}"
+             class="btn btn-sm btn-primary">
+            View History
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="3" class="empty-row">No patients assigned yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

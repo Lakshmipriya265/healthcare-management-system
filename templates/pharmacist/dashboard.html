@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Pharmacist Dashboard — MediCare System{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Pharmacist Dashboard</h1>
+    <p>Welcome, <strong>{{ session.full_name }}</strong>. Manage medications and prescriptions.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STATISTICS CARDS
+══════════════════════════════════════ -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon" style="background: #e3f2fd; color: #1976d2;">💊</div>
+    <div class="stat-content">
+      <div class="stat-value">{{ total_prescriptions }}</div>
+      <div class="stat-label">Total Prescriptions</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon" style="background: #f3e5f5; color: #7b1fa2;">👥</div>
+    <div class="stat-content">
+      <div class="stat-value">{{ total_patients_with_meds }}</div>
+      <div class="stat-label">Patients with Medications</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     RECENT PRESCRIPTIONS
+══════════════════════════════════════ -->
+<div class="section-header">
+  <div class="section-title">Recent Prescriptions</div>
+</div>
+
+<div class="table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Patient Name</th>
+        <th>Medication</th>
+        <th>Dosage</th>
+        <th>Frequency</th>
+        <th>Duration</th>
+        <th>Prescribed By</th>
+        <th>Date</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rx in recent_prescriptions %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ rx.patient_name }}</td>
+        <td><strong>{{ rx.medication }}</strong></td>
+        <td><code>{{ rx.dosage }}</code></td>
+        <td>{{ rx.frequency }}</td>
+        <td>{{ rx.duration }}</td>
+        <td>{{ rx.doctor_name }}</td>
+        <td>{{ rx.prescribed_date }}</td>
+        <td>{{ rx.notes or '—' }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="9" class="empty-row">No prescriptions yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════
+     QUICK INFO
+══════════════════════════════════════ -->
+<div class="section-header">
+  <div class="section-title">Your Profile</div>
+</div>
+
+<div class="info-card">
+  <div class="info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+    <div>
+      <span class="info-label">Full Name</span>
+      <span>{{ session.full_name }}</span>
+    </div>
+    <div>
+      <span class="info-label">Username</span>
+      <span><code>{{ session.username }}</code></span>
+    </div>
+    <div>
+      <span class="info-label">Role</span>
+      <span><span class="badge badge-purple">{{ session.role | upper }}</span></span>
+    </div>
+    <div>
+      <span class="info-label">System</span>
+      <span>MediCare Healthcare Management System</span>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

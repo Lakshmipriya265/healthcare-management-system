@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Nurse Dashboard — MediCare HMS{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Nurse Dashboard</h1>
+    <p>Welcome, <strong>{{ session.full_name }}</strong>. Monitor and record patient vitals.</p>
+  </div>
+  <a href="{{ url_for('nurse_add_vitals') }}" class="btn btn-primary">+ Record Vitals</a>
+</div>
+
+<!-- ══════════════════════════════════════
+     QUICK ACTIONS
+══════════════════════════════════════ -->
+<div class="action-grid">
+  <a href="{{ url_for('nurse_add_vitals') }}" class="action-card">
+    <span class="action-icon">🩺</span>
+    <span>Record Vitals</span>
+  </a>
+  <a href="#all-patients" class="action-card">
+    <span class="action-icon">👥</span>
+    <span>All Patients</span>
+  </a>
+  <a href="#recent-vitals" class="action-card">
+    <span class="action-icon">📋</span>
+    <span>Recent Records</span>
+  </a>
+</div>
+
+<!-- ══════════════════════════════════════
+     RECENT VITALS RECORDED
+══════════════════════════════════════ -->
+<div id="recent-vitals" class="section-header">
+  <div class="section-title">Recently Recorded Vitals</div>
+</div>
+
+<div class="table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Patient</th>
+        <th>Temp (°F)</th>
+        <th>Blood Pressure</th>
+        <th>Pulse (bpm)</th>
+        <th>O₂ Level (%)</th>
+        <th>Weight (kg)</th>
+        <th>Recorded On</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in recent_vitals %}
+      <tr>
+        <td><strong>{{ v.patient_name }}</strong></td>
+        <td>
+          {% if v.temperature %}
+            <span class="{% if v.temperature > 99.5 %}text-danger{% elif v.temperature < 96.5 %}text-warning{% else %}text-success{% endif %}">
+              {{ v.temperature }}
+            </span>
+          {% else %}—{% endif %}
+        </td>
+        <td>{{ v.blood_pressure or '—' }}</td>
+        <td>
+          {% if v.pulse %}
+            <span class="{% if v.pulse > 100 or v.pulse < 60 %}text-danger{% else %}text-success{% endif %}">
+              {{ v.pulse }}
+            </span>
+          {% else %}—{% endif %}
+        </td>
+        <td>
+          {% if v.oxygen_level %}
+            <span class="{% if v.oxygen_level < 95 %}text-danger{% else %}text-success{% endif %}">
+              {{ v.oxygen_level }}%
+            </span>
+          {% else %}—{% endif %}
+        </td>
+        <td>{{ v.weight ~ ' kg' if v.weight else '—' }}</td>
+        <td>{{ v.recorded_at[:16] if v.recorded_at else '—' }}</td>
+        <td>
+          <a href="{{ url_for('nurse_update_patient', patient_id=v.patient_id) }}"
+             class="btn btn-sm btn-secondary">
+            Update Info
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" class="empty-row">
+          No vitals recorded yet.
+          <a href="{{ url_for('nurse_add_vitals') }}">Record now →</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════
+     ALL PATIENTS LIST
+══════════════════════════════════════ -->
+<div id="all-patients" class="section-header">
+  <div class="section-title">All Patients</div>
+  <input type="text" id="table-search" placeholder="Search patient…" class="search-input" />
+</div>
+
+<div class="table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Patient Name</th>
+        <th>Blood Group</th>
+        <th>Gender</th>
+        <th>Phone</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in patients %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:.6rem">
+            <div class="avatar avatar-teal">{{ p.full_name[0] }}</div>
+            <strong>{{ p.full_name }}</strong>
+          </div>
+        </td>
+        <td>
+          {% if p.blood_group %}
+            <span class="badge badge-red">{{ p.blood_group }}</span>
+          {% else %}—{% endif %}
+        </td>
+        <td>{{ p.gender or '—' }}</td>
+        <td>{{ p.phone or '—' }}</td>
+        <td style="display:flex; gap:.5rem; flex-wrap:wrap;">
+          <a href="{{ url_for('nurse_add_vitals') }}" class="btn btn-sm btn-primary">
+            Record Vitals
+          </a>
+          <a href="{{ url_for('nurse_update_patient', patient_id=p.id) }}"
+             class="btn btn-sm btn-secondary">
+            Update Info
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" class="empty-row">No patients found in the system.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

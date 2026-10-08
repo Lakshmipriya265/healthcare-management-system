@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}Patient History — MediCare HMS{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Patient History</h1>
+    <p>Full medical record for <strong>{{ patient.full_name }}</strong></p>
+  </div>
+  <div style="display:flex; gap:.75rem">
+    <a href="{{ url_for('doctor_add_prescription') }}" class="btn btn-primary">+ Add Prescription</a>
+    <a href="{{ url_for('doctor_patients') }}" class="btn btn-secondary">← Back</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PATIENT INFO CARD
+══════════════════════════════════════ -->
+<div class="info-card">
+  <div class="info-card-title">🧑 Patient Information</div>
+  <div class="info-grid">
+    <div>
+      <span class="info-label">Full Name</span>
+      <span>{{ patient.full_name }}</span>
+    </div>
+    <div>
+      <span class="info-label">Date of Birth</span>
+      <span>{{ patient.date_of_birth or '—' }}</span>
+    </div>
+    <div>
+      <span class="info-label">Gender</span>
+      <span>{{ patient.gender or '—' }}</span>
+    </div>
+    <div>
+      <span class="info-label">Blood Group</span>
+      <span class="badge badge-red">{{ patient.blood_group or '—' }}</span>
+    </div>
+    <div>
+      <span class="info-label">Phone</span>
+      <span>{{ patient.phone or '—' }}</span>
+    </div>
+    <div>
+      <span class="info-label">Address</span>
+      <span>{{ patient.address or '—' }}</span>
+    </div>
+    <div>
+      <span class="info-label">Emergency Contact</span>
+      <span>{{ patient.emergency_contact or '—' }}</span>
+    </div>
+    <div>
+      <span class="info-label">Email</span>
+      <span>{{ patient.email or '—' }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PRESCRIPTIONS
+══════════════════════════════════════ -->
+<div class="section-header">
+  <div class="section-title">Prescriptions</div>
+  <a href="{{ url_for('doctor_add_prescription') }}" class="btn btn-sm btn-primary">+ New</a>
+</div>
+
+<div class="table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Medication</th>
+        <th>Dosage</th>
+        <th>Frequency</th>
+        <th>Duration</th>
+        <th>Instructions</th>
+        <th>Date Prescribed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rx in prescriptions %}
+      <tr>
+        <td><strong>{{ rx.medication }}</strong></td>
+        <td>{{ rx.dosage }}</td>
+        <td>{{ rx.frequency }}</td>
+        <td>{{ rx.duration }}</td>
+        <td>{{ rx.notes or '—' }}</td>
+        <td>{{ rx.prescribed_date[:10] }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" class="empty-row">
+          No prescriptions yet.
+          <a href="{{ url_for('doctor_add_prescription') }}">Add one →</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════
+     VITALS HISTORY
+══════════════════════════════════════ -->
+<div class="section-header">
+  <div class="section-title">Recorded Vitals</div>
+</div>
+
+<div class="table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Temp (°F)</th>
+        <th>Blood Pressure</th>
+        <th>Pulse (bpm)</th>
+        <th>O₂ Level (%)</th>
+        <th>Weight (kg)</th>
+        <th>Height (cm)</th>
+        <th>Notes</th>
+        <th>Recorded On</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in vitals %}
+      <tr>
+        <td>
+          <span class="{% if v.temperature > 99.5 %}text-danger{% elif v.temperature < 96.5 %}text-warning{% else %}text-success{% endif %}">
+            {{ v.temperature }}
+          </span>
+        </td>
+        <td>{{ v.blood_pressure or '—' }}</td>
+        <td>
+          <span class="{% if v.pulse > 100 or v.pulse < 60 %}text-danger{% else %}text-success{% endif %}">
+            {{ v.pulse }}
+          </span>
+        </td>
+        <td>
+          <span class="{% if v.oxygen_level < 95 %}text-danger{% else %}text-success{% endif %}">
+            {{ v.oxygen_level }}%
+          </span>
+        </td>
+        <td>{{ v.weight ~ ' kg' if v.weight else '—' }}</td>
+        <td>{{ v.height ~ ' cm' if v.height else '—' }}</td>
+        <td>{{ v.notes or '—' }}</td>
+        <td>{{ v.recorded_at[:10] if v.recorded_at else '—' }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" class="empty-row">No vitals recorded yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

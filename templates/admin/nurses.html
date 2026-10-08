@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Manage Nurses — MediCare System{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Nurses</h1>
+    <p>All registered nurses in the system.</p>
+  </div>
+  <a href="{{ url_for('admin_add_nurse') }}" class="btn btn-primary">+ Add Nurse</a>
+</div>
+
+<!-- Search bar -->
+<div class="section-header">
+  <div class="section-title">Nurse List</div>
+  <input type="text" id="table-search" placeholder="Search nurse…" class="search-input" />
+</div>
+
+<div class="table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for nurse in nurses %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:.6rem">
+            <div class="avatar avatar-purple">
+              {{ nurse.full_name[0] }}
+            </div>
+            <strong>{{ nurse.full_name }}</strong>
+          </div>
+        </td>
+        <td><code>{{ nurse.username }}</code></td>
+        <td>{{ nurse.email or '—' }}</td>
+        <td>
+          <a href="{{ url_for('admin_delete_nurse', nurse_id=nurse.id) }}"
+             class="btn btn-sm btn-danger"
+             onclick="return confirm('Delete {{ nurse.full_name }}? This cannot be undone.')">
+            Delete
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" class="empty-row">
+          No nurses registered yet.
+          <a href="{{ url_for('admin_add_nurse') }}">Add one now →</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

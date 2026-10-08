@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}Record Vitals — MediCare HMS{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Record Patient Vitals</h1>
+    <p>Enter the measured vitals for a patient below.</p>
+  </div>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+</div>
+
+<div class="form-card">
+  <form method="POST" action="{{ url_for('nurse_add_vitals') }}">
+
+    <!-- Patient selection -->
+    <div class="form-section-title">Select Patient</div>
+    <div class="form-group">
+      <label for="patient_id">Patient Name <span class="required">*</span></label>
+      <select id="patient_id" name="patient_id" required>
+        <option value="">-- Choose a Patient --</option>
+        {% for p in patients %}
+        <option value="{{ p.id }}">{{ p.full_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Vital measurements -->
+    <div class="form-section-title">Vital Measurements</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="temperature">Temperature (°F) <span class="required">*</span></label>
+        <input
+          type="number"
+          id="temperature"
+          name="temperature"
+          step="0.1"
+          min="90"
+          max="115"
+          placeholder="e.g. 98.6"
+          required
+        />
+        <small class="form-hint">Normal range: 97°F – 99°F</small>
+      </div>
+      <div class="form-group">
+        <label for="blood_pressure">Blood Pressure (mmHg) <span class="required">*</span></label>
+        <input
+          type="text"
+          id="blood_pressure"
+          name="blood_pressure"
+          placeholder="e.g. 120/80"
+          pattern="\d{2,3}\/\d{2,3}"
+          title="Format: systolic/diastolic e.g. 120/80"
+          required
+        />
+        <small class="form-hint">Format: systolic/diastolic</small>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="pulse">Pulse Rate (bpm) <span class="required">*</span></label>
+        <input
+          type="number"
+          id="pulse"
+          name="pulse"
+          min="30"
+          max="250"
+          placeholder="e.g. 72"
+          required
+        />
+        <small class="form-hint">Normal range: 60 – 100 bpm</small>
+      </div>
+      <div class="form-group">
+        <label for="oxygen_level">Oxygen Level (SpO₂ %) <span class="required">*</span></label>
+        <input
+          type="number"
+          id="oxygen_level"
+          name="oxygen_level"
+          step="0.1"
+          min="50"
+          max="100"
+          placeholder="e.g. 98.5"
+          required
+        />
+        <small class="form-hint">Normal: 95% – 100%</small>
+      </div>
+    </div>
+
+    <!-- Physical measurements -->
+    <div class="form-section-title">Physical Measurements</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="weight">Weight (kg)</label>
+        <input
+          type="number"
+          id="weight"
+          name="weight"
+          step="0.1"
+          min="1"
+          max="500"
+          placeholder="e.g. 70.5"
+        />
+      </div>
+      <div class="form-group">
+        <label for="height">Height (cm)</label>
+        <input
+          type="number"
+          id="height"
+          name="height"
+          step="0.1"
+          min="30"
+          max="300"
+          placeholder="e.g. 175.0"
+        />
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="form-section-title">Additional Notes</div>
+    <div class="form-group">
+      <label for="notes">Observations / Remarks</label>
+      <textarea
+        id="notes"
+        name="notes"
+        rows="4"
+        placeholder="Any observations, abnormalities, or nurse remarks…"
+      ></textarea>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save Vitals</button>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+
+  </form>
+</div>
+
+<!-- Reference card -->
+<div class="info-card" style="max-width:780px; margin-top:1.5rem">
+  <div class="info-card-title">📊 Normal Vital Signs Reference</div>
+  <div class="info-grid">
+    <div>
+      <span class="info-label">Temperature</span>
+      <span>97°F – 99°F (36.1°C – 37.2°C)</span>
+    </div>
+    <div>
+      <span class="info-label">Blood Pressure</span>
+      <span>Less than 120/80 mmHg</span>
+    </div>
+    <div>
+      <span class="info-label">Pulse Rate</span>
+      <span>60 – 100 bpm</span>
+    </div>
+    <div>
+      <span class="info-label">Oxygen Level</span>
+      <span>95% – 100% SpO₂</span>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

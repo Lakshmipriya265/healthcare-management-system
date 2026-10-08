@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Manage Patients — MediCare HMS{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Patients</h1>
+    <p>All registered patients in the system.</p>
+  </div>
+  <a href="{{ url_for('admin_add_patient') }}" class="btn btn-primary">+ Add Patient</a>
+</div>
+
+<!-- Search bar -->
+<div class="section-header">
+  <div class="section-title">Patient List</div>
+  <input type="text" id="table-search" placeholder="Search patient…" class="search-input" />
+</div>
+
+<div class="table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Gender</th>
+        <th>Blood Group</th>
+        <th>Phone</th>
+        <th>Date of Birth</th>
+        <th>Email</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in patients %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:.6rem">
+            <div class="avatar avatar-green">{{ p.full_name[0] }}</div>
+            <strong>{{ p.full_name }}</strong>
+          </div>
+        </td>
+        <td><code>{{ p.username }}</code></td>
+        <td>{{ p.gender or '—' }}</td>
+        <td>
+          {% if p.blood_group %}
+            <span class="badge badge-red">{{ p.blood_group }}</span>
+          {% else %}—{% endif %}
+        </td>
+        <td>{{ p.phone or '—' }}</td>
+        <td>{{ p.date_of_birth or '—' }}</td>
+        <td>{{ p.email or '—' }}</td>
+        <td>
+          <a href="{{ url_for('admin_delete_patient', patient_id=p.patient_id) }}"
+             class="btn btn-sm btn-danger"
+             onclick="return confirm('Delete {{ p.full_name }}? This cannot be undone.')">
+            Delete
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="9" class="empty-row">
+          No patients registered yet.
+          <a href="{{ url_for('admin_add_patient') }}">Add one now →</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

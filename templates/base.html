@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}MediCare System{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,wght@0,600;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       NAVIGATION BAR
+  ══════════════════════════════════════ -->
+  {% if session.user_id %}
+  <nav class="navbar">
+
+    <!-- Brand logo -->
+    <a href="{{ url_for('dashboard') }}" class="nav-brand">
+      <span class="brand-cross">✚</span>
+      <span class="brand-text">MediCare <em>System</em></span>
+    </a>
+
+    <!-- Role-based navigation links -->
+    <ul class="nav-links">
+
+      <li>
+        <a href="{{ url_for('dashboard') }}"
+           class="nav-link {% if request.endpoint in ['dashboard', 'admin_dashboard', 'doctor_dashboard', 'nurse_dashboard', 'pharmacist_dashboard', 'patient_dashboard'] %}active{% endif %}">
+          Dashboard
+        </a>
+      </li>
+
+      {% if session.role == 'admin' %}
+        <li>
+          <a href="{{ url_for('admin_doctors') }}"
+             class="nav-link {% if 'doctor' in request.endpoint %}active{% endif %}">
+            Doctors
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('admin_nurses') }}"
+             class="nav-link {% if 'nurse' in request.endpoint and session.role == 'admin' %}active{% endif %}">
+            Nurses
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('admin_patients') }}"
+             class="nav-link {% if 'patient' in request.endpoint and session.role == 'admin' %}active{% endif %}">
+            Patients
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('admin_appointments') }}"
+             class="nav-link {% if 'appointment' in request.endpoint %}active{% endif %}">
+            Appointments
+          </a>
+        </li>
+
+      {% elif session.role == 'doctor' %}
+        <li>
+          <a href="{{ url_for('doctor_patients') }}"
+             class="nav-link {% if request.endpoint == 'doctor_patients' %}active{% endif %}">
+            My Patients
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('doctor_add_prescription') }}"
+             class="nav-link {% if request.endpoint == 'doctor_add_prescription' %}active{% endif %}">
+            Add Prescription
+          </a>
+        </li>
+
+      {% elif session.role == 'nurse' %}
+        <li>
+          <a href="{{ url_for('nurse_add_vitals') }}"
+             class="nav-link {% if request.endpoint == 'nurse_add_vitals' %}active{% endif %}">
+            Record Vitals
+          </a>
+        </li>
+
+      {% elif session.role == 'pharmacist' %}
+        <li>
+          <a href="{{ url_for('pharmacist_dashboard') }}"
+             class="nav-link {% if request.endpoint == 'pharmacist_dashboard' %}active{% endif %}">
+            Prescriptions
+          </a>
+        </li>
+
+      {% elif session.role == 'patient' %}
+        <li>
+          <a href="{{ url_for('patient_book_appointment') }}"
+             class="nav-link {% if request.endpoint == 'patient_book_appointment' %}active{% endif %}">
+            Book Appointment
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('patient_prescriptions') }}"
+             class="nav-link {% if request.endpoint == 'patient_prescriptions' %}active{% endif %}">
+            Prescriptions
+          </a>
+        </li>
+      {% endif %}
+
+    </ul>
+
+    <!-- User info and logout -->
+    <div class="nav-user">
+      <span class="user-badge {{ session.role }}">{{ session.role | upper }}</span>
+      <span class="user-name">{{ session.full_name }}</span>
+      <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+    </div>
+
+  </nav>
+  {% endif %}
+
+  <!-- ══════════════════════════════════════
+       FLASH MESSAGES
+  ══════════════════════════════════════ -->
+  <div class="flash-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endwith %}
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MAIN PAGE CONTENT
+  ══════════════════════════════════════ -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>© 2026 MediCare &nbsp;·&nbsp; Healthcare Management System</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — MediCare System{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Admin Dashboard</h1>
+    <p>Welcome, <strong>{{ session.full_name }}</strong>. System overview and management tools.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STATISTICS CARDS
+══════════════════════════════════════ -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon" style="background: #e3f2fd; color: #1976d2;">👨‍⚕️</div>
+    <div class="stat-content">
+      <div class="stat-value">{{ stats.total_doctors }}</div>
+      <div class="stat-label">Total Doctors</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon" style="background: #f3e5f5; color: #7b1fa2;">👥</div>
+    <div class="stat-content">
+      <div class="stat-value">{{ stats.total_patients }}</div>
+      <div class="stat-label">Total Patients</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon" style="background: #e8f5e9; color: #388e3c;">📅</div>
+    <div class="stat-content">
+      <div class="stat-value">{{ stats.total_appts }}</div>
+      <div class="stat-label">Total Appointments</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon" style="background: #fff3e0; color: #f57c00;">⏳</div>
+    <div class="stat-content">
+      <div class="stat-value">{{ stats.pending_appts }}</div>
+      <div class="stat-label">Pending Appointments</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     QUICK ACTIONS
+══════════════════════════════════════ -->
+<div class="section-header">
+  <div class="section-title">Quick Actions</div>
+</div>
+
+<div class="quick-actions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+  <a href="{{ url_for('admin_doctors') }}" class="action-card" style="padding: 20px; background: #f5f5f5; border-radius: 8px; text-decoration: none; color: inherit; border-left: 4px solid #1976d2; transition: all 0.3s;">
+    <div style="font-weight: 600; margin-bottom: 5px;">👨‍⚕️ Manage Doctors</div>
+    <div style="font-size: 0.9rem; color: #666;">View, add, or remove doctors</div>
+  </a>
+
+  <a href="{{ url_for('admin_nurses') }}" class="action-card" style="padding: 20px; background: #f5f5f5; border-radius: 8px; text-decoration: none; color: inherit; border-left: 4px solid #7b1fa2; transition: all 0.3s;">
+    <div style="font-weight: 600; margin-bottom: 5px;">👩‍⚕️ Manage Nurses</div>
+    <div style="font-size: 0.9rem; color: #666;">View, add, or remove nurses</div>
+  </a>
+
+  <a href="{{ url_for('admin_patients') }}" class="action-card" style="padding: 20px; background: #f5f5f5; border-radius: 8px; text-decoration: none; color: inherit; border-left: 4px solid #f57c00; transition: all 0.3s;">
+    <div style="font-weight: 600; margin-bottom: 5px;">👥 Manage Patients</div>
+    <div style="font-size: 0.9rem; color: #666;">View, add, or remove patients</div>
+  </a>
+
+  <a href="{{ url_for('admin_appointments') }}" class="action-card" style="padding: 20px; background: #f5f5f5; border-radius: 8px; text-decoration: none; color: inherit; border-left: 4px solid #388e3c; transition: all 0.3s;">
+    <div style="font-weight: 600; margin-bottom: 5px;">📅 Manage Appointments</div>
+    <div style="font-size: 0.9rem; color: #666;">View and update appointments</div>
+  </a>
+</div>
+
+<!-- ══════════════════════════════════════
+     SYSTEM INFORMATION
+══════════════════════════════════════ -->
+<div class="section-header">
+  <div class="section-title">System Information</div>
+</div>
+
+<div class="info-card">
+  <div class="info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+    <div>
+      <span class="info-label">System Name</span>
+      <span>MediCare Healthcare Management System</span>
+    </div>
+    <div>
+      <span class="info-label">Current User</span>
+      <span>{{ session.full_name }} ({{ session.role | upper }})</span>
+    </div>
+    <div>
+      <span class="info-label">Username</span>
+      <span><code>{{ session.username }}</code></span>
+    </div>
+    <div>
+      <span class="info-label">Version</span>
+      <span>1.0.0</span>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

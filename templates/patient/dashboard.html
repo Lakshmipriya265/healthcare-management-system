@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}My Health Portal — MediCare HMS{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>My Health Portal</h1>
+    <p>Welcome, <strong>{{ session.full_name }}</strong>. Here's your personal health overview.</p>
+  </div>
+  <a href="{{ url_for('patient_book_appointment') }}" class="btn btn-primary">+ Book Appointment</a>
+</div>
+
+{% if patient %}
+
+  <!-- ══════════════════════════════════════
+       PERSONAL INFORMATION CARD
+  ══════════════════════════════════════ -->
+  <div class="info-card">
+    <div class="info-card-title">🧑 Personal Information</div>
+    <div class="info-grid">
+      <div>
+        <span class="info-label">Full Name</span>
+        <span>{{ session.full_name }}</span>
+      </div>
+      <div>
+        <span class="info-label">Date of Birth</span>
+        <span>{{ patient.date_of_birth or '—' }}</span>
+      </div>
+      <div>
+        <span class="info-label">Gender</span>
+        <span>{{ patient.gender or '—' }}</span>
+      </div>
+      <div>
+        <span class="info-label">Blood Group</span>
+        <span class="badge badge-red">{{ patient.blood_group or '—' }}</span>
+      </div>
+      <div>
+        <span class="info-label">Phone</span>
+        <span>{{ patient.phone or '—' }}</span>
+      </div>
+      <div>
+        <span class="info-label">Emergency Contact</span>
+        <span>{{ patient.emergency_contact or '—' }}</span>
+      </div>
+      <div>
+        <span class="info-label">Address</span>
+        <span>{{ patient.address or '—' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       APPOINTMENTS
+  ══════════════════════════════════════ -->
+  <div class="section-header">
+    <div class="section-title">My Appointments</div>
+    <a href="{{ url_for('patient_book_appointment') }}" class="btn btn-sm btn-secondary">+ New</a>
+  </div>
+
+  <div class="table-card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Doctor</th>
+          <th>Specialization</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Reason</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appt in appointments %}
+        <tr>
+          <td><strong>{{ appt.doctor_name }}</strong></td>
+          <td>{{ appt.specialization }}</td>
+          <td>{{ appt.appointment_date }}</td>
+          <td>{{ appt.appointment_time }}</td>
+          <td>{{ appt.reason }}</td>
+          <td>
+            <span class="badge
+              {% if appt.status == 'Confirmed' %}badge-green
+              {% elif appt.status == 'Completed' %}badge-blue
+              {% elif appt.status == 'Cancelled' %}badge-red
+              {% else %}badge-yellow{% endif %}">
+              {{ appt.status }}
+            </span>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="empty-row">
+            No appointments yet.
+            <a href="{{ url_for('patient_book_appointment') }}">Book one now →</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PRESCRIPTIONS
+  ══════════════════════════════════════ -->
+  <div class="section-header">
+    <div class="section-title">My Prescriptions</div>
+    <a href="{{ url_for('patient_prescriptions') }}" class="btn btn-sm btn-secondary">View All</a>
+  </div>
+
+  <div class="table-card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Medication</th>
+          <th>Dosage</th>
+          <th>Frequency</th>
+          <th>Duration</th>
+          <th>Doctor</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rx in prescriptions %}
+        <tr>
+          <td><strong>{{ rx.medication }}</strong></td>
+          <td>{{ rx.dosage }}</td>
+          <td>{{ rx.frequency }}</td>
+          <td>{{ rx.duration }}</td>
+          <td>{{ rx.doctor_name }}</td>
+          <td>{{ rx.prescribed_date[:10] }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="empty-row">No prescriptions yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       QUICK ACTIONS
+  ══════════════════════════════════════ -->
+  <div class="section-title">Quick Actions</div>
+  <div class="action-grid">
+    <a href="{{ url_for('patient_book_appointment') }}" class="action-card">
+      <span class="action-icon">📅</span>
+      <span>Book Appointment</span>
+    </a>
+    <a href="{{ url_for('patient_prescriptions') }}" class="action-card">
+      <span class="action-icon">💊</span>
+      <span>My Prescriptions</span>
+    </a>
+  </div>
+
+{% else %}
+  <!-- No patient profile linked -->
+  <div class="empty-state">
+    <div style="font-size:3rem; margin-bottom:1rem">🏥</div>
+    <h3>No Profile Found</h3>
+    <p>Your patient profile has not been set up yet.<br />Please contact the admin to link your account.</p>
+  </div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Registration — MediCare System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,wght@0,600;1,400&display=swap" rel="stylesheet" />
+</head>
+<body class="login-body">
+
+  <div class="login-wrapper">
+
+    <!-- ── LEFT PANEL: Branding ── -->
+    <div class="login-left">
+      <div class="login-brand">
+        <div class="brand-icon">✚</div>
+        <h1>MediCare<br /><em>System</em></h1>
+        <p>Healthcare Management System</p>
+      </div>
+
+      <div class="login-features">
+        <div class="login-feature-item">✔ Secure patient registration</div>
+        <div class="login-feature-item">✔ Easy appointment booking</div>
+        <div class="login-feature-item">✔ Access your health records</div>
+        <div class="login-feature-item">✔ View prescriptions & vitals</div>
+      </div>
+
+      <div class="login-tagline">
+        <blockquote>"Your health, in your hands."</blockquote>
+      </div>
+    </div>
+
+    <!-- ── RIGHT PANEL: Registration Form ── -->
+    <div class="login-right">
+      <div class="login-card">
+
+        <h2>Patient Registration</h2>
+        <p class="login-sub">Create your account to get started</p>
+        <p style="font-size: 0.85rem; color: #666; margin-bottom: 20px;">Your unique Patient ID will be generated automatically after registration.</p>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endwith %}
+
+        <!-- Registration form -->
+        <form method="POST" action="{{ url_for('register') }}">
+
+          <div class="form-group">
+            <label for="full_name">Full Name</label>
+            <input
+              type="text"
+              id="full_name"
+              name="full_name"
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Choose a username"
+              autocomplete="username"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Create a strong password"
+              autocomplete="new-password"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <input
+              type="password"
+              id="confirm_password"
+              name="confirm_password"
+              placeholder="Confirm your password"
+              autocomplete="new-password"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">
+            Create Account &nbsp;→
+          </button>
+
+        </form>
+
+        <!-- Login link -->
+        <div class="register-link" style="margin-top: 20px; text-align: center;">
+          <p>Already have an account? <a href="{{ url_for('login') }}" style="color: #2563eb; text-decoration: none; font-weight: 500;">Sign In</a></p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Manage Doctors — MediCare HMS{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Doctors</h1>
+    <p>All registered doctors in the system.</p>
+  </div>
+  <a href="{{ url_for('admin_add_doctor') }}" class="btn btn-primary">+ Add Doctor</a>
+</div>
+
+<!-- Search bar -->
+<div class="section-header">
+  <div class="section-title">Doctor List</div>
+  <input type="text" id="table-search" placeholder="Search doctor…" class="search-input" />
+</div>
+
+<div class="table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Specialization</th>
+        <th>Phone</th>
+        <th>Available Days</th>
+        <th>Email</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for doc in doctors %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:.6rem">
+            <div class="avatar avatar-blue">
+              {{ doc.full_name[3] if doc.full_name.startswith('Dr.') else doc.full_name[0] }}
+            </div>
+            <strong>{{ doc.full_name }}</strong>
+          </div>
+        </td>
+        <td><code>{{ doc.username }}</code></td>
+        <td>
+          <span class="badge badge-blue">{{ doc.specialization or '—' }}</span>
+        </td>
+        <td>{{ doc.phone or '—' }}</td>
+        <td>
+          {% if doc.available_days %}
+            {% for day in doc.available_days.split(',') %}
+              <span class="day-pill">{{ day.strip() }}</span>
+            {% endfor %}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+        <td>{{ doc.email or '—' }}</td>
+        <td>
+          <a href="{{ url_for('admin_delete_doctor', doctor_id=doc.doctor_id) }}"
+             class="btn btn-sm btn-danger"
+             onclick="return confirm('Delete Dr. {{ doc.full_name }}? This cannot be undone.')">
+            Delete
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" class="empty-row">
+          No doctors registered yet.
+          <a href="{{ url_for('admin_add_doctor') }}">Add one now →</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

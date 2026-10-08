@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}My Patients — MediCare HMS{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>My Patients</h1>
+    <p>All patients assigned to you via appointments.</p>
+  </div>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+</div>
+
+<!-- Search bar -->
+<div class="section-header">
+  <div class="section-title">Patient List</div>
+  <input type="text" id="table-search" placeholder="Search patient…" class="search-input" />
+</div>
+
+<div class="table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Patient Name</th>
+        <th>Email</th>
+        <th>Blood Group</th>
+        <th>Gender</th>
+        <th>Phone</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in patients %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:.6rem">
+            <div class="avatar avatar-blue">{{ p.full_name[0] }}</div>
+            <strong>{{ p.full_name }}</strong>
+          </div>
+        </td>
+        <td>{{ p.email or '—' }}</td>
+        <td>
+          {% if p.blood_group %}
+            <span class="badge badge-red">{{ p.blood_group }}</span>
+          {% else %}—{% endif %}
+        </td>
+        <td>{{ p.gender or '—' }}</td>
+        <td>{{ p.phone or '—' }}</td>
+        <td style="display:flex; gap:.5rem; flex-wrap:wrap;">
+          <a href="{{ url_for('doctor_patient_history', patient_id=p.id) }}"
+             class="btn btn-sm btn-primary">
+            View History
+          </a>
+          <a href="{{ url_for('doctor_add_prescription') }}"
+             class="btn btn-sm btn-secondary">
+            Prescribe
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" class="empty-row">
+          No patients assigned yet. Patients appear here once appointments are booked with you.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

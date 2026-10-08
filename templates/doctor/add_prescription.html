@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Add Prescription — MediCare HMS{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Add Prescription</h1>
+    <p>Write a new medication prescription for a patient.</p>
+  </div>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+</div>
+
+<div class="form-card">
+  <form method="POST" action="{{ url_for('doctor_add_prescription') }}">
+
+    <!-- Patient selection -->
+    <div class="form-section-title">Select Patient</div>
+    <div class="form-group">
+      <label for="patient_id">Patient Name <span class="required">*</span></label>
+      <select id="patient_id" name="patient_id" required>
+        <option value="">-- Choose a Patient --</option>
+        {% for p in patients %}
+        <option value="{{ p.id }}">{{ p.full_name }}</option>
+        {% endfor %}
+      </select>
+      {% if not patients %}
+      <small class="form-hint" style="color:var(--warning)">
+        ⚠ No patients assigned yet. Patients appear here once appointments are booked with you.
+      </small>
+      {% endif %}
+    </div>
+
+    <!-- Medication details -->
+    <div class="form-section-title">Medication Details</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="medication">Medication Name <span class="required">*</span></label>
+        <input
+          type="text"
+          id="medication"
+          name="medication"
+          placeholder="e.g. Paracetamol, Amoxicillin"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="dosage">Dosage <span class="required">*</span></label>
+        <input
+          type="text"
+          id="dosage"
+          name="dosage"
+          placeholder="e.g. 500mg, 10ml"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="frequency">Frequency <span class="required">*</span></label>
+        <select id="frequency" name="frequency" required>
+          <option value="">-- Select Frequency --</option>
+          <option value="Once daily">Once daily</option>
+          <option value="Twice daily">Twice daily</option>
+          <option value="Three times daily">Three times daily</option>
+          <option value="Four times daily">Four times daily</option>
+          <option value="Every 6 hours">Every 6 hours</option>
+          <option value="Every 8 hours">Every 8 hours</option>
+          <option value="Every 12 hours">Every 12 hours</option>
+          <option value="As needed">As needed (SOS)</option>
+          <option value="Before meals">Before meals</option>
+          <option value="After meals">After meals</option>
+          <option value="At bedtime">At bedtime</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="duration">Duration <span class="required">*</span></label>
+        <input
+          type="text"
+          id="duration"
+          name="duration"
+          placeholder="e.g. 5 days, 2 weeks, 1 month"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="form-section-title">Instructions &amp; Notes</div>
+    <div class="form-group">
+      <label for="notes">Special Instructions</label>
+      <textarea
+        id="notes"
+        name="notes"
+        rows="4"
+        placeholder="e.g. Take after meals. Avoid alcohol. Store in a cool, dry place…"
+      ></textarea>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save Prescription</button>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+
+  </form>
+</div>
+
+<!-- Common medications quick reference -->
+<div class="info-card" style="max-width:780px; margin-top:1.5rem">
+  <div class="info-card-title">💊 Common Frequency Abbreviations</div>
+  <div class="info-grid">
+    <div><span class="info-label">OD</span><span>Once daily</span></div>
+    <div><span class="info-label">BD / BID</span><span>Twice daily</span></div>
+    <div><span class="info-label">TDS / TID</span><span>Three times daily</span></div>
+    <div><span class="info-label">QID</span><span>Four times daily</span></div>
+    <div><span class="info-label">SOS / PRN</span><span>As needed</span></div>
+    <div><span class="info-label">HS</span><span>At bedtime</span></div>
+  </div>
+</div>
+
+{% endblock %}

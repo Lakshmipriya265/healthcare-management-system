@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}My Prescriptions{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>My Prescriptions</h1>
+    <p>All medications prescribed to you by your doctors.</p>
+  </div>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back</a>
+</div>
+
+{% if prescriptions %}
+<div class="rx-grid">
+  {% for rx in prescriptions %}
+  <div class="rx-card">
+    <div class="rx-header">
+      <div class="rx-icon">💊</div>
+      <div>
+        <div class="rx-medication">{{ rx.medication }}</div>
+        <div class="rx-doctor">Prescribed by {{ rx.doctor_name }}</div>
+      </div>
+      <div class="rx-date">{{ rx.prescribed_date[:10] }}</div>
+    </div>
+    <div class="rx-details">
+      <div class="rx-detail-item">
+        <span class="rx-detail-label">Dosage</span>
+        <span class="rx-detail-value">{{ rx.dosage }}</span>
+      </div>
+      <div class="rx-detail-item">
+        <span class="rx-detail-label">Frequency</span>
+        <span class="rx-detail-value">{{ rx.frequency }}</span>
+      </div>
+      <div class="rx-detail-item">
+        <span class="rx-detail-label">Duration</span>
+        <span class="rx-detail-value">{{ rx.duration }}</span>
+      </div>
+    </div>
+    {% if rx.notes %}
+    <div class="rx-notes">
+      <span class="rx-notes-label">📝 Notes:</span> {{ rx.notes }}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<div class="empty-state">
+  <div style="font-size:3rem;margin-bottom:1rem">💊</div>
+  <h3>No Prescriptions Yet</h3>
+  <p>Your doctor will add prescriptions after your appointment.</p>
+  <a href="{{ url_for('patient_book_appointment') }}" class="btn btn-primary" style="margin-top:1rem">Book an Appointment</a>
+</div>
+{% endif %}
+
+{% endblock %}

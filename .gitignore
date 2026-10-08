@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Environment / secret files
+.env
+.env.*
+
+# Local database
+*.db
+healthcare_db
+
+# IDE / editor files
+.vscode/
+.idea/
+
+# Salesforce / tool-generated files
+.sf/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Flask
+instance/
+
+# Logs
+*.log
